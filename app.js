@@ -17,15 +17,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
 
-// app.use(cors());
-// app.options('*',cors());
-// var allowCrossDomain = function(req,res,next) {
-//   res.setHeader('Access-Control-Allow-Origin', '*');
-//   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-//   next();  
-// }
-// app.use(allowCrossDomain);
+app.use(cors());
+app.options('*',cors());
+var allowCrossDomain = function(req,res,next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();  
+}
+app.use(allowCrossDomain);
 
 const sendEmailNodeMailer = require("./controllers/sendEmail");
 
@@ -41,9 +41,9 @@ app.use(nosqlSanitizer());
 app.use(limiter)
 
 
-app.use(cors({
-  exposedHeaders: ['Content-Disposition']
-}));
+// app.use(cors({
+//   exposedHeaders: ['Content-Disposition']
+// }));
 app.use(fileUpload());
 
 app.get("/", (req, res) => {
