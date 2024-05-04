@@ -8,7 +8,7 @@ import { z } from "zod";
 const FileDownload = () => {
   const [password, setPassword] = useState("");
   const [fileId, setFileId] = useState("");
-  const [ seePassword, setSeePassword ] = useState(false);
+  const [seePassword, setSeePassword] = useState(false);
   const { user } = useUser();
 
   React.useEffect(() => {
@@ -23,7 +23,7 @@ const FileDownload = () => {
   });
 
   const handleDownload = async () => {
-    
+
     const validationResult = downloadSchema.safeParse({ fileId, password });
     if (!validationResult.success) {
       validationResult.error.issues.forEach(issue => {
@@ -37,13 +37,14 @@ const FileDownload = () => {
       const hashedPassword = await hashPassword(password);
 
       const response = await axios.get(
-        `http://localhost:4000/download/${fileId}`,
-        { responseType: "blob",
-        headers: {
-          'Password': hashedPassword,
-          'email' : user.primaryEmailAddress
+        `http://secure-share-server.vercel.app/download/${fileId}`,
+        {
+          responseType: "blob",
+          headers: {
+            'Password': hashedPassword,
+            'email': user.primaryEmailAddress
+          }
         }
-      }
       );
 
 
@@ -141,7 +142,7 @@ const FileDownload = () => {
       .map(b => b.toString(16).padStart(2, '0'))
       .join('');
   };
-  
+
 
   return (
     <div className="px-8 md:px-28 max-sm:px-2">
@@ -165,7 +166,7 @@ const FileDownload = () => {
             className="block w-full p-4 text-gray-900 border border-gray-300 rounded-lg bg-gray-50 sm:text-md focus:ring-blue-500 focus:border-blue-500 dark:bg-gray-700 dark:border-gray-600 dark:placeholder-gray-400 dark:text-white dark:focus:ring-blue-500 dark:focus:border-blue-500"
           />
         </div>
-       
+
 
         <AdvancedPasswordInput seePassword={seePassword} setSeePassword={setSeePassword} filePassword={password} setFilePassword={setPassword} idValue="file-password-decrypt" placeValue="Enter File Password" />
 

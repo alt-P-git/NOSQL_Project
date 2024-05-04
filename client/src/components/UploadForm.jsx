@@ -145,7 +145,7 @@ const UploadForm = ({ progress }) => {
       formData.append("password", hashedPassword);
 
 
-      const res = await axios.post("http://localhost:4000", formData, {
+      const res = await axios.post("http://secure-share-server.vercel.app", formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },

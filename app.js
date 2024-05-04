@@ -54,7 +54,7 @@ app.post("/", express.json(), async (req, res) => {
 
     const extension = path.extname(originalName);
     const fileId = uuidv4();
-    const downloadLink = `http://localhost:4000/download/${fileId}`;
+    const downloadLink = `http://secure-share-server.vercel.app/download/${fileId}`;
 
     const newFile = new File({
       fileName: filename,
@@ -93,7 +93,7 @@ app.post("/", express.json(), async (req, res) => {
 app.get("/download/:id", async (req, res) => {
   try {
     const file = await File.findOne({
-      downloadLink: `http://localhost:4000/download/${req.params.id}`,
+      downloadLink: `http://secure-share-server.vercel.app/download/${req.params.id}`,
     });
 
 
