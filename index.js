@@ -19,22 +19,22 @@ app.use(xss());
 app.enable('trust proxy')
 
 app.use(cors());
-app.options('*',cors());
-var allowCrossDomain = function(req,res,next) {
+app.options('*', cors());
+var allowCrossDomain = function (req, res, next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
-  next();  
+  next();
 }
 app.use(allowCrossDomain);
 
 const sendEmailNodeMailer = require("./controllers/sendEmail");
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000,
-	limit: 100,
-	standardHeaders: 'draft-7',
-	legacyHeaders: false,
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
 })
 
 app.use(nosqlSanitizer());
@@ -70,7 +70,7 @@ app.post("/", express.json(), async (req, res) => {
 
     const extension = path.extname(originalName);
     const fileId = uuidv4();
-    const downloadLink = `http://secure-share-server.vercel.app/download/${fileId}`;
+    const downloadLink = `http://securesharenosql-thedrbs-projects.vercel.app/download/${fileId}`;
 
     const newFile = new File({
       fileName: filename,
@@ -83,7 +83,7 @@ app.post("/", express.json(), async (req, res) => {
     });
     await newFile.save();
 
-    
+
     if (receiverEmail) {
       try {
         await sendEmailNodeMailer(receiverEmail, fileId)
@@ -93,7 +93,7 @@ app.post("/", express.json(), async (req, res) => {
         return res.status(500).json({ msg: "Error sending email", error: error.message });
       }
     }
-    
+
 
     res
       .status(200)
@@ -109,7 +109,7 @@ app.post("/", express.json(), async (req, res) => {
 app.get("/download/:id", async (req, res) => {
   try {
     const file = await File.findOne({
-      downloadLink: `http://secure-share-server.vercel.app/download/${req.params.id}`,
+      downloadLink: `http://securesharenosql-thedrbs-projects.vercel.app/download/${req.params.id}`,
     });
 
 
