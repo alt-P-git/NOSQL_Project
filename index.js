@@ -49,7 +49,6 @@ app.use(fileUpload());
 
 app.get("/hello", (req, res) => {
   res.send("Hello World! Server running fine");
-  res.end();
 });
 
 
