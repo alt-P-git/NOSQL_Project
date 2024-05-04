@@ -17,15 +17,15 @@ app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
 
-app.use(cors());
-app.options('*',cors());
-var allowCrossDomain = function(req,res,next) {
-  res.header('Access-Control-Allow-Origin', '*');
-  res.header('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
-  res.header('Access-Control-Allow-Headers', 'Content-Type');
-  next();  
-}
-app.use(allowCrossDomain);
+// app.use(cors());
+// app.options('*',cors());
+// var allowCrossDomain = function(req,res,next) {
+//   res.setHeader('Access-Control-Allow-Origin', '*');
+//   res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+//   res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+//   next();  
+// }
+// app.use(allowCrossDomain);
 
 const sendEmailNodeMailer = require("./controllers/sendEmail");
 
