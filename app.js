@@ -46,6 +46,10 @@ app.use(cors({
 }));
 app.use(fileUpload());
 
+app.get("/", (req, res) => {
+  res.send("Hello World! Server running fine");
+});
+
 
 app.post("/", express.json(), async (req, res) => {
 
