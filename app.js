@@ -16,9 +16,9 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
+app.enable('trust proxy')
 
-// app.use(cors());
-
+app.use(cors());
 app.options('*',cors());
 var allowCrossDomain = function(req,res,next) {
   res.setHeader('Access-Control-Allow-Origin', '*');
