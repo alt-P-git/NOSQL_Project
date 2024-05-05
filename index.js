@@ -143,7 +143,10 @@ app.get("/download/:id", async (req, res) => {
       return res.status(403).send({ msg: "Access denied" });
     }
 
-    const filename = file.originalName || "downloaded_file";
+    const extension = file.extension || "";
+    const filename = file.originalName || "downloaded_file" + extension;
+    
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
     res.setHeader(
       "Content-Disposition",
       `attachment; filename="${encodeURIComponent(filename)}"`

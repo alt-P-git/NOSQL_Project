@@ -47,10 +47,12 @@ const FileDownload = () => {
         }
       );
 
-
-      let filename = "decrypted_file";
-      const contentDisposition = response.headers["content-disposition"];
+      console.log(response.headers);
+      
+      /* const contentDisposition = response.headers["Content-Disposition"];
+      let filename = "downloaded_file";
       if (contentDisposition) {
+        // console.log(contentDisposition);
         const matches =
           /filename\*?=['"]?(?:UTF-8'['"]*)?([^;'\"]+)['"]?;?/i.exec(
             contentDisposition
@@ -58,8 +60,16 @@ const FileDownload = () => {
         if (matches && matches[1]) {
           filename = decodeURIComponent(matches[1]);
         }
-      }
+      } */
 
+      const contentDisposition = response.headers['content-disposition'];
+      const filenameRegex = /filename[^;=\n]*=((['"]).*?\2|[^;\n]*)/;
+      const matches = filenameRegex.exec(contentDisposition);
+      let filename = 'file';
+      if (matches != null && matches[1]) {
+        filename = matches[1].replace(/['"]/g, '');
+      }
+      console.log('Filename:', filename);
 
       const decryptedFile = await decryptFile(
         new Blob([response.data]),
