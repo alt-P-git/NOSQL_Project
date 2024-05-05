@@ -61,7 +61,7 @@ const sendEmailNodeMailer = async (receiverEmail, fileID, senderName = "Encrypt 
     html: `
     <h3>Dear user,</h3>
     <br/>
-    Download page: <a href='http://localhost:5173/download'>download page link</a>
+    Download page: <a href='http://securesharenosql-thedrbs-projects.vercel.app/download'>download page link</a>
     <br />
     Here is your File ID: <strong>${fileID}</strong>
     <br /><br />
