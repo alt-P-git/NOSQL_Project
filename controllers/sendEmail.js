@@ -71,7 +71,7 @@ const sendEmailNodeMailer = async (receiverEmail, fileID, senderName = "Encrypt 
 
   transporter.sendMail(message, (err, info) => {
     if (err) {
-      console.log("Error occurred. " + err.message);
+      console.log("Error occurred when sending email => " + err.message);
       return err;
     }
     console.log("Message sent: %s", info.messageId);

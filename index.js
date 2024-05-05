@@ -38,7 +38,7 @@ app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
-app.enable('trust proxy')
+// app.enable('trust proxy')
 
 app.use(cors());
 app.options('*', cors());
