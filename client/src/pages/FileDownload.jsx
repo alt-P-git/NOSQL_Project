@@ -37,7 +37,7 @@ const FileDownload = () => {
       const hashedPassword = await hashPassword(password);
 
       const response = await axios.get(
-        `http://securesharenosql-thedrbs-projects.vercel.app/download/${fileId}`,
+        `https://securesharenosql-thedrbs-projects.vercel.app/download/${fileId}`,
         {
           responseType: "blob",
           headers: {
