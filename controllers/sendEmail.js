@@ -78,6 +78,7 @@ const sendEmailNodeMailer = async (receiverEmail, fileID, senderName = "Encrypt 
     return info;
   }
   );
+  console.log("email sent...");
   };
 
 const sendEmailMailjet = async (receiverEmail, fileID, senderName = "Encrypt Share") => {
