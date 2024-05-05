@@ -74,7 +74,7 @@ const sendEmailNodeMailer = async (receiverEmail, fileID, senderName = "Encrypt 
       console.log("Error occurred when sending email => " + err.message);
       return err;
     }
-    console.log("Message sent: %s", info.messageId);
+    console.log("Message sent via email: %s", info.messageId);
     return info;
   }
   );
