@@ -12,17 +12,51 @@ const nosqlSanitizer = require('express-nosql-sanitizer');
 const { xss } = require('express-xss-sanitizer');
 const app = express();
 
+//CLOUD
+const { BlobServiceClient } = require('@azure/storage-blob');
+const azureConnectionString = process.env.AZURE_CONNECTION_STRING;
+const accountName = process.env.ACCOUNT_NAME
+const sasToken = process.env.SAS_TOKEN
+const containerName = process.env.CONTAINER_NAME
+
+const blobServiceClient = BlobServiceClient.fromConnectionString(azureConnectionString);
+const containerClient = blobServiceClient.getContainerClient(containerName)
+
+const uploadFile = async (file) => {
+  const blobName = uuidv4();
+  const blockBlobClient = containerClient.getBlockBlobClient(blobName);
+
+  console.log('Uploading to Azure storage as blob:', blobName);
+  const data = file.data
+  const uploadBlobResponse = await blockBlobClient.upload(data, data.length);
+
+  console.log("Blob was uploaded successfully. requestId: ", uploadBlobResponse.requestId);
+  return blobName;
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(xss());
 
+app.enable('trust proxy')
+
+app.use(cors());
+app.options('*', cors());
+var allowCrossDomain = function (req, res, next) {
+  res.setHeader('Access-Control-Allow-Origin', '*');
+  res.setHeader('Access-Control-Allow-Methods', 'GET, PUT, POST, DELETE');
+  res.setHeader('Access-Control-Allow-Headers', 'Content-Type');
+  next();
+}
+app.use(allowCrossDomain);
+
 const sendEmailNodeMailer = require("./controllers/sendEmail");
 
 const limiter = rateLimit({
-	windowMs: 15 * 60 * 1000,
-	limit: 100,
-	standardHeaders: 'draft-7',
-	legacyHeaders: false,
+  windowMs: 15 * 60 * 1000,
+  limit: 100,
+  standardHeaders: 'draft-7',
+  legacyHeaders: false,
 })
 
 app.use(nosqlSanitizer());
@@ -30,10 +64,14 @@ app.use(nosqlSanitizer());
 app.use(limiter)
 
 
-app.use(cors({
-  exposedHeaders: ['Content-Disposition']
-}));
+// app.use(cors({
+//   exposedHeaders: ['Content-Disposition']
+// }));
 app.use(fileUpload());
+
+app.get("/hello", (req, res) => {
+  res.send("Hello World! Server running fine");
+});
 
 
 app.post("/", express.json(), async (req, res) => {
@@ -49,12 +87,14 @@ app.post("/", express.json(), async (req, res) => {
 
   const filename = Date.now() + "_" + file.name;
   const uploadPath = __dirname + "/uploads/" + filename;
-  try {
-    await file.mv(uploadPath);
 
+  try {
+    //instead of moving to uploadPath, we will upload to Azure Blob Storage
+    // await file.mv(uploadPath);
+    const fileId = await uploadFile(file);
     const extension = path.extname(originalName);
-    const fileId = uuidv4();
-    const downloadLink = `http://localhost:4000/download/${fileId}`;
+
+    const downloadLink = `http://securesharenosql-thedrbs-projects.vercel.app/download/${fileId}`;
 
     const newFile = new File({
       fileName: filename,
@@ -67,7 +107,7 @@ app.post("/", express.json(), async (req, res) => {
     });
     await newFile.save();
 
-    
+
     if (receiverEmail) {
       try {
         await sendEmailNodeMailer(receiverEmail, fileId)
@@ -77,7 +117,7 @@ app.post("/", express.json(), async (req, res) => {
         return res.status(500).json({ msg: "Error sending email", error: error.message });
       }
     }
-    
+
 
     res
       .status(200)
@@ -93,9 +133,8 @@ app.post("/", express.json(), async (req, res) => {
 app.get("/download/:id", async (req, res) => {
   try {
     const file = await File.findOne({
-      downloadLink: `http://localhost:4000/download/${req.params.id}`,
+      downloadLink: `http://securesharenosql-thedrbs-projects.vercel.app/download/${req.params.id}`,
     });
-
 
     const password = req.headers['password'];
     const email = req.headers['email'];
@@ -104,25 +143,33 @@ app.get("/download/:id", async (req, res) => {
       return res.status(403).send({ msg: "Access denied" });
     }
 
-    const filename = file.originalName || "downloaded_file";
+    const extension = file.extension || "";
+    const filename = file.originalName || "downloaded_file" + extension;
+    
+    res.setHeader('Access-Control-Expose-Headers', 'Content-Disposition');
     res.setHeader(
       "Content-Disposition",
       `attachment; filename="${encodeURIComponent(filename)}"`
     );
-    res.download(file.path, filename, async (err) => {
-      if (!err) {
+    
+    const blobClient = containerClient.getBlockBlobClient(req.params.id);
 
-        await File.deleteOne({ _id: file._id });
+    const downloadBlockBlobResponse = await blobClient.download(0);
+    downloadBlockBlobResponse.readableStreamBody.pipe(res);
+    // res.download(file.path, filename, async (err) => {
+    //   if (!err) {
 
-        fs.unlink(file.path, (unlinkErr) => {
-          if (unlinkErr) {
-            console.error("Greška prilikom brisanja fajla:", unlinkErr);
-          } else {
-            console.log("Fajl uspešno obrisan nakon preuzimanja.");
-          }
-        });
-      }
-    });
+    //     await File.deleteOne({ _id: file._id });
+
+    //     fs.unlink(file.path, (unlinkErr) => {
+    //       if (unlinkErr) {
+    //         console.error("Greška prilikom brisanja fajla:", unlinkErr);
+    //       } else {
+    //         console.log("Fajl uspešno obrisan nakon preuzimanja.");
+    //       }
+    //     });
+    //   }
+    // });
   } catch (err) {
     res.status(500).send({ msg: "Error retrieving file", error: err.message });
   }

@@ -2,13 +2,14 @@
   "name": "secured-file-send",
   "version": "1.0.0",
   "description": "",
-  "main": "app.js",
+  "main": "index.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1"
   },
   "author": "Kuzma02",
   "license": "ISC",
   "dependencies": {
+    "@azure/storage-blob": "^12.17.0",
     "@sendgrid/mail": "^8.1.0",
     "bcryptjs": "^2.4.3",
     "cors": "^2.8.5",
@@ -18,6 +19,7 @@
     "express-nosql-sanitizer": "^1.1.1",
     "express-rate-limit": "^7.1.5",
     "express-xss-sanitizer": "^1.1.8",
+    "mongodb": "^6.6.0",
     "mongoose": "^8.1.0",
     "node-mailjet": "^6.0.5",
     "nodemailer": "^6.9.8",
