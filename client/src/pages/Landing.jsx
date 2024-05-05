@@ -1,12 +1,11 @@
 import { Banner } from "../components";
-import { LandingFeatures, PricingTable } from "../components";
+import { LandingFeatures} from "../components";
 
 const Landing = () => {
   return (
     <div>
       <Banner />
       <LandingFeatures />
-      <PricingTable />
     </div>
   );
 };
