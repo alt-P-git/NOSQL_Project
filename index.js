@@ -34,6 +34,16 @@ const uploadFile = async (file) => {
   return blobName;
 }
 
+const options = { deleteSnapshots: "include" };
+
+const deleteUpload = async (blobName) => {
+  const blockBlobClient = await containerClient.getBlockBlobClient(blobName);
+
+  await blockBlobClient.delete(options);
+
+  console.log("Deleting blob from Azure storage:", blobName);
+}
+
 app.use(express.json());
 app.use(express.urlencoded({ extended: true }));
 app.use(xss());
@@ -64,9 +74,9 @@ app.use(nosqlSanitizer());
 app.use(limiter)
 
 
-// app.use(cors({
-//   exposedHeaders: ['Content-Disposition']
-// }));
+app.use(cors({
+  exposedHeaders: ['Content-Disposition']
+}));
 app.use(fileUpload());
 
 app.get("/hello", (req, res) => {
@@ -159,6 +169,10 @@ app.get("/download/:id", async (req, res) => {
   } catch (err) {
     res.status(500).send({ msg: "Error retrieving file", error: err.message });
   }
+
+
+  //after download, delete the blob
+  await deleteUpload(req.params.id);
 });
 
 app.post("/send", express.json(), async (req, res) => {
