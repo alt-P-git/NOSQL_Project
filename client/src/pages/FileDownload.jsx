@@ -4,6 +4,9 @@ import axios from "axios";
 import { AdvancedPasswordInput, PageHeader } from "../components";
 import { toast } from 'react-toastify'
 import { z } from "zod";
+const serverURI = import.meta.env.VITE_SERVER_URI;
+
+
 
 const FileDownload = () => {
   const [password, setPassword] = useState("");
@@ -37,7 +40,7 @@ const FileDownload = () => {
       const hashedPassword = await hashPassword(password);
 
       const response = await axios.get(
-        `https://securesharenosql-thedrbs-projects.vercel.app/download/${fileId}`,
+        `https://${serverURI}/download/${fileId}`,
         {
           responseType: "blob",
           headers: {

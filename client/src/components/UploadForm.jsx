@@ -12,6 +12,8 @@ import { z } from "zod";
 
 const receiversEmailSchema = z.string().email();
 const passwordSchema = z.string().min(20, "Password field must be valid length and value")
+const serverURI = import.meta.env.VITE_SERVER_URI;
+
 
 const UploadForm = ({ progress }) => {
   const [file, setFile] = useState();
@@ -145,7 +147,7 @@ const UploadForm = ({ progress }) => {
       formData.append("password", hashedPassword);
 
 
-      const res = await axios.post(`https://securesharenosql-thedrbs-projects.vercel.app`, formData, {
+      const res = await axios.post(`https://${serverURI}`, formData, {
         headers: {
           "Content-Type": "multipart/form-data",
         },
