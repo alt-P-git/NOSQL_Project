@@ -13,7 +13,7 @@ const Banner = () => {
           The Only Tool You Need To Send Your Files Securely
         </h1>
         <p className="text=xl font-bold text-gray-600">
-          Send your files and photos <span className="uppercase text-blue-500">securely</span> with EncryptShare <span className="uppercase text-blue-500">anytime</span> and <span className="uppercase text-blue-500">anywhere</span> in the
+          Send your files and photos <span className="uppercase text-blue-500">securely</span> with Secure Share <span className="uppercase text-blue-500">anytime</span> and <span className="uppercase text-blue-500">anywhere</span> in the
           world.{" "}
         </p>
         <div className="flex max-sm:flex-col max-sm:gap-y-2">

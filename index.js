@@ -156,20 +156,6 @@ app.get("/download/:id", async (req, res) => {
 
     const downloadBlockBlobResponse = await blobClient.download(0);
     downloadBlockBlobResponse.readableStreamBody.pipe(res);
-    // res.download(file.path, filename, async (err) => {
-    //   if (!err) {
-
-    //     await File.deleteOne({ _id: file._id });
-
-    //     fs.unlink(file.path, (unlinkErr) => {
-    //       if (unlinkErr) {
-    //         console.error("Greška prilikom brisanja fajla:", unlinkErr);
-    //       } else {
-    //         console.log("Fajl uspešno obrisan nakon preuzimanja.");
-    //       }
-    //     });
-    //   }
-    // });
   } catch (err) {
     res.status(500).send({ msg: "Error retrieving file", error: err.message });
   }

@@ -15,7 +15,7 @@ const Footer = () => {
               width={170}
               height={230}
               src={Logo}
-              alt="EncryptShare Logo"
+              alt="Secure Share Logo"
             />
           </Link>
           <ul className="flex flex-wrap items-center mb-6 text-sm font-medium text-blue-500 sm:mb-0 dark:text-gray-400">
@@ -36,14 +36,14 @@ const Footer = () => {
             </li>
           </ul>
         </div>
-        <hr className="my-6 border-gray-200 sm:mx-auto dark:border-blue-700 lg:my-8" />
+        {/* <hr className="my-6 border-gray-200 sm:mx-auto dark:border-blue-700 lg:my-8" />
         <span className="block text-lg text-blue-500 sm:text-center dark:text-gray-400 font-semibold max-sm:text-sm">
           © 2024{" "}
           <Link to="/" className="hover:underline">
-            EncryptShare™
+            Secure Share™
           </Link>
           . All Rights Reserved.
-        </span>
+        </span> */}
       </div>
     </footer>
   );
