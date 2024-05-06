@@ -173,6 +173,8 @@ app.get("/download/:id", async (req, res) => {
 
   //after download, delete the blob
   await deleteUpload(req.params.id);
+  //delete file from database
+  await File.deleteOne({ downloadLink: `http://securesharenosql-thedrbs-projects.vercel.app/download/${req.params.id}` });
 });
 
 app.post("/send", express.json(), async (req, res) => {
