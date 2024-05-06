@@ -86,7 +86,7 @@ const FileDownload = () => {
       setFileId("");
       toast.success("File successfully downloaded and deleted from the server");
     } catch (error) {
-      console.error("Greška prilikom preuzimanja ili dešifrovanja:", error);
+      console.error("Wrong file id or  password", error);
       toast.error("Wrong File ID or password");
     }
   };
@@ -113,7 +113,7 @@ const FileDownload = () => {
 
       return new Blob([decryptedContent]);
     } catch (err) {
-      console.error("Greška prilikom dešifrovanja: ", err);
+      console.error("Decrypt error: ", err);
       throw err;
     }
   };
